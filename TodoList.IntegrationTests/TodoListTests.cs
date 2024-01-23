@@ -3,6 +3,7 @@ using FluentAssertions;
 using TodoList.Application.Commands;
 using TodoList.Application.Responses;
 using TodoList.Domain;
+using TodoList.Domain.Enums;
 
 namespace TodoList.IntegrationTests;
 
@@ -16,6 +17,7 @@ public class TodoListTests
         _server = new IntegrationTestServer();
     }
 
+    [Category("TodoList")]
     [Test]
     public async Task Get_Todo_List()
     {
@@ -31,6 +33,7 @@ public class TodoListTests
         content.Title.Should().Be(todoList.Title);
     }
 
+    [Category("TodoList")]
     [Test]
     public async Task Create_Todo_List()
     {
@@ -49,6 +52,7 @@ public class TodoListTests
         todoList.Title.Should().Be(title);
     }
 
+    [Category("TodoList")]
     [Test]
     public async Task Update_Todo_List()
     {
@@ -67,6 +71,7 @@ public class TodoListTests
         todoList.Title.Should().Be(targetTitle);
     }
 
+    [Category("TodoList")]
     [Test]
     public async Task Delete_Todo_List()
     {
@@ -80,4 +85,46 @@ public class TodoListTests
         var afterTodoList = repository.Get(beforeTodoList.Id);
         afterTodoList.Should().BeNull();
     }
+
+    [Category("TodoItem")]
+    [Test]
+    public async Task Create_Todo_Item()
+    {
+        // Arrange
+        var repository = _server.GetRequiredService<ITodoListRepository>();
+        var beforeTodoList = new Domain.TodoList("Todo");
+        repository.Create(beforeTodoList);
+
+        var todoListId = beforeTodoList.Id;
+        var command = new CreateTodoItemCommand()
+        {
+            ListId = todoListId,
+            Title = "TodoItem",
+            Priority = Priority.Medium,
+            DueDate = new DateOnly(2024,2,20)
+        };
+        var jsonContent = JsonContent.Create(command);
+        
+        // Act
+        var response = await _server.Client.PostAsync($"api/todo-list/{todoListId}/todo-item", jsonContent);
+        
+        // Assert
+        response.IsSuccessStatusCode.Should().BeTrue();
+        var todoItemId = await response.Content.ReadFromJsonAsync<Guid>();
+        todoItemId.Should().NotBeEmpty();
+        
+        var afterTodoList = repository.Get(todoListId)!;
+        var todoItems = afterTodoList.TodoItems;
+        todoItems.Count.Should().Be(1);
+        todoItems.First().Id.Should().Be(todoItemId);
+        todoItems.First().Title.Should().Be(command.Title);
+    }
+}
+
+public class CreateTodoItemCommand
+{
+    public Guid ListId { get; set; }
+    public string Title { get; set; }
+    public Priority? Priority { get; set; }
+    public DateOnly? DueDate { get; set; }
 }
