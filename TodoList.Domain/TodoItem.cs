@@ -6,6 +6,11 @@ public class TodoItem
 {
     public TodoItem(string title, Priority priority, Guid listId)
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            throw new Exception("Title is required");
+        }
+
         Id = Guid.NewGuid();
         Title = title;
         Priority = priority;

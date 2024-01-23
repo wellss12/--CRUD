@@ -1,3 +1,7 @@
+using FluentAssertions;
+using TodoList.Domain;
+using TodoList.Domain.Enums;
+
 namespace TodoList.UnitTests;
 
 public class Tests
@@ -8,8 +12,14 @@ public class Tests
     }
 
     [Test]
-    public void Test1()
+    [TestCase("")]
+    [TestCase(null)]
+    public void Title_Must_Has_Value(string title)
     {
-        Assert.Pass();
+        var newTodoListFunc = () => new Domain.TodoList(title);
+        var newTodoItemFunc = () => new TodoItem(title, Priority.Low, Guid.NewGuid());
+        
+        newTodoListFunc.Should().Throw<Exception>().WithMessage("Title is required");
+        newTodoItemFunc.Should().Throw<Exception>().WithMessage("Title is required");
     }
 }

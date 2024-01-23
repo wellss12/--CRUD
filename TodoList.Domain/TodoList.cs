@@ -6,6 +6,11 @@ public class TodoList
 
     public TodoList(string title)
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            throw new Exception("Title is required");
+        }
+
         Id = Guid.NewGuid();
         Title = title;
     }
@@ -16,7 +21,7 @@ public class TodoList
     public IReadOnlyList<TodoItem> TodoItems => _todoItems;
 
     public void UpdateTitle(string title) => Title = title;
-    
+
     public void AddItem(TodoItem item) => _todoItems.Add(item);
 
     public void RemoveItem(TodoItem item) => _todoItems.Remove(item);
