@@ -66,4 +66,26 @@ public class TodoListTests
         todoList.Id.Should().Be(original.Id);
         todoList.Title.Should().Be(targetTitle);
     }
+
+    [Test]
+    public async Task Delete_Todo_List()
+    {
+        var repository = _server.GetRequiredService<ITodoListRepository>();
+        var beforeTodoList = new Domain.TodoList("Todo");
+        repository.Create(beforeTodoList);
+
+        var response = await _server.Client.DeleteAsync($"api/todo-list/{beforeTodoList.Id}");
+
+        response.IsSuccessStatusCode.Should().BeTrue();
+        var afterTodoList = repository.Get(beforeTodoList.Id);
+        afterTodoList.Should().BeNull();
+    }
+}
+
+public class DeleteTodoListCommand
+{
+    public DeleteTodoListCommand(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }
