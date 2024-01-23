@@ -18,8 +18,20 @@ public class TodoListController : ControllerBase
     }
 
     [HttpGet("{id:Guid}")]
-    public async Task<TodoListResponse> Get(Guid id) => await _mediator.Send(new GetTodoListQuery(id));
-    
+    public async Task<TodoListResponse> Get(Guid id)
+    {
+        return await _mediator.Send(new GetTodoListQuery(id));
+    }
+
     [HttpPost]
-    public async Task<Guid> Create([FromBody] CreateTodoListCommand command) => await _mediator.Send(command);
+    public async Task<Guid> Create([FromBody] CreateTodoListCommand command)
+    {
+        return await _mediator.Send(command);
+    }
+
+    [HttpPut]
+    public async Task Update([FromBody] UpdateTodoListCommand command)
+    {
+        await _mediator.Send(command);
+    }
 }

@@ -19,4 +19,9 @@ public class TodoListRepository : DM.ITodoListRepository
             throw new InvalidOperationException($"Todo list with id {todoList.Id} already exists");
         }
     }
+
+    public void Update(DM.TodoList todoList)
+    {
+        _todoListMap[todoList.Id] = todoList;
+    }
 }

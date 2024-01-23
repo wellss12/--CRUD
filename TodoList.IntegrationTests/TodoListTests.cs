@@ -63,11 +63,3 @@ public class TodoListTests
         todoList.Title.Should().Be(targetTitle);
     }
 }
-
-public class UpdateTodoListCommand
-{
-    public UpdateTodoListCommand(Guid id, string title)
-    {
-        throw new NotImplementedException();
-    }
-}

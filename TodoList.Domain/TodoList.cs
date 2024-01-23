@@ -8,5 +8,7 @@ public class TodoList
         Title = title;
     }
     public Guid Id { get; }
-    public string Title { get; }
+    public string Title { get; private set; }
+
+    public void UpdateTitle(string title) => Title = title;
 }
