@@ -155,7 +155,7 @@ public class TodoListTests
     
     [Category("TodoItem")]
     [Test]
-    public async Task Delete_Todo_Item()
+    public async Task Remove_Todo_Item()
     {
         var repository = _server.GetRequiredService<ITodoListRepository>();
         var beforeTodoList = new Domain.TodoList("Todo");

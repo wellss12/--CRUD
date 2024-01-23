@@ -29,4 +29,10 @@ public class TodoItemController : ControllerBase
         command.ItemId = itemId;
         await _mediator.Send(command);
     }
+    
+    [HttpDelete("{itemId:guid}")]
+    public async Task Delete(Guid listId, Guid itemId)
+    {
+        await _mediator.Send(new RemoveTodoItemCommand(listId, itemId));
+    }
 }

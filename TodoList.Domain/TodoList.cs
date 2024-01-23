@@ -18,4 +18,6 @@ public class TodoList
     public void UpdateTitle(string title) => Title = title;
     
     public void AddItem(TodoItem item) => _todoItems.Add(item);
+
+    public void RemoveItem(TodoItem item) => _todoItems.Remove(item);
 }
