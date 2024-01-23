@@ -9,6 +9,6 @@ public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, TodoLis
 {
     public async Task<TodoListResponse> Handle(GetTodoListQuery query, CancellationToken cancellationToken)
     {
-        return await Task.FromResult(new TodoListResponse(){Id = query.Id});
+        return await Task.FromResult(new TodoListResponse { Id = query.Id });
     }
 }
