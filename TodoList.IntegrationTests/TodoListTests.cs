@@ -19,12 +19,16 @@ public class TodoListTests
     [Test]
     public async Task Get_Todo_List()
     {
-        var listId = Guid.NewGuid();
-        var result = await _server.Client.GetAsync($"api/todo-list/{listId}");
+        var repository = _server.GetRequiredService<ITodoListRepository>();
+        var todoList = new Domain.TodoList("Todo1");
+        repository.Create(todoList);
+
+        var result = await _server.Client.GetAsync($"api/todo-list/{todoList.Id}");
 
         result.IsSuccessStatusCode.Should().BeTrue();
         var content = await result.Content.ReadFromJsonAsync<TodoListResponse>();
-        content.Id.Should().Be(listId);
+        content.Id.Should().Be(todoList.Id);
+        content.Title.Should().Be(todoList.Title);
     }
 
     [Test]
