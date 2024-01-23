@@ -122,6 +122,7 @@ public class TodoListTests
         todoItem.DueDate.Should().Be(command.DueDate);
     }
 
+    [Category("TodoItem")]
     [Test]
     public async Task Update_Todo_Item()
     {
@@ -131,7 +132,7 @@ public class TodoListTests
         var beforeTodoItem = new TodoItem("TodoItem", Priority.Low, beforeTodoList.Id);
         beforeTodoList.AddItem(beforeTodoItem);
         repository.Create(beforeTodoList);
-    
+
         var command = new UpdateTodoItemCommand()
         {
             Title = "TitleChanged",
@@ -139,10 +140,11 @@ public class TodoListTests
             DueDate = new DateOnly(2024, 2, 20)
         };
         var jsonContent = JsonContent.Create(command);
-    
+
         // Act
-        var response = await _server.Client.PutAsync($"api/todo-list/{beforeTodoList.Id}/todo-item/{beforeTodoItem.Id}", jsonContent);
-    
+        var response = await _server.Client.PutAsync($"api/todo-list/{beforeTodoList.Id}/todo-item/{beforeTodoItem.Id}",
+            jsonContent);
+
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
         var afterTodoItem = repository.Get(beforeTodoList.Id)!.TodoItems[0];
@@ -150,12 +152,4 @@ public class TodoListTests
         afterTodoItem.Priority.Should().Be(command.Priority);
         afterTodoItem.DueDate.Should().Be(command.DueDate);
     }
-}
-
-public class UpdateTodoItemCommand
-{
-    public Guid Id { get; set; }
-    public string? Title { get; set; }
-    public Priority Priority { get; set; }
-    public DateOnly? DueDate { get; set; }
 }

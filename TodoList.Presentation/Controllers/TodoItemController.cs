@@ -21,4 +21,12 @@ public class TodoItemController : ControllerBase
         command.ListId = listId;
         return await _mediator.Send(command);
     }
+    
+    [HttpPut("{itemId:guid}")]
+    public async Task Update(Guid listId, Guid itemId, [FromBody] UpdateTodoItemCommand command)
+    {
+        command.ListId = listId;
+        command.ItemId = itemId;
+        await _mediator.Send(command);
+    }
 }
