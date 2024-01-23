@@ -22,7 +22,14 @@ public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, TodoLis
         return new TodoListResponse
         {
             Id = todoList.Id,
-            Title = todoList.Title
+            Title = todoList.Title,
+            TodoItems = todoList.TodoItems.Select(x => new TodoItemResponse
+            {
+                Id = x.Id,
+                Title = x.Title,
+                DueDate = x.DueDate,
+                Priority = x.Priority
+            })
         };
     }
 }

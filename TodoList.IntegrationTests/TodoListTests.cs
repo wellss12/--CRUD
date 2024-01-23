@@ -22,7 +22,9 @@ public class TodoListTests
     public async Task Get_Todo_List()
     {
         var repository = _server.GetRequiredService<ITodoListRepository>();
-        var todoList = new Domain.TodoList("Todo1");
+        var todoList = new Domain.TodoList("Todo");
+        var todoItem = new TodoItem("TodoItem", Priority.Low, todoList.Id);
+        todoList.AddItem(todoItem);
         repository.Create(todoList);
 
         var result = await _server.Client.GetAsync($"api/todo-list/{todoList.Id}");
@@ -31,6 +33,17 @@ public class TodoListTests
         var content = await result.Content.ReadFromJsonAsync<TodoListResponse>();
         content.Id.Should().Be(todoList.Id);
         content.Title.Should().Be(todoList.Title);
+        content.TodoItems.Count().Should().Be(1);
+        content.TodoItems.Should().BeEquivalentTo(new List<TodoItemResponse>()
+        {
+            new()
+            {
+                Id = todoItem.Id,
+                Title = todoItem.Title,
+                DueDate = todoItem.DueDate,
+                Priority = todoItem.Priority
+            }
+        });
     }
 
     [Category("TodoList")]
