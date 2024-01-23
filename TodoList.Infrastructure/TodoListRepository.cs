@@ -24,4 +24,9 @@ public class TodoListRepository : DM.ITodoListRepository
     {
         _todoListMap[todoList.Id] = todoList;
     }
+
+    public void Delete(Guid listId)
+    {
+        _todoListMap.Remove(listId);
+    }
 }

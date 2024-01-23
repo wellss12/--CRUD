@@ -34,4 +34,10 @@ public class TodoListController : ControllerBase
     {
         await _mediator.Send(command);
     }
+    
+    [HttpDelete("{id:Guid}")]
+    public async Task Delete(Guid id)
+    {
+        await _mediator.Send(new DeleteTodoListCommand(id));
+    }
 }

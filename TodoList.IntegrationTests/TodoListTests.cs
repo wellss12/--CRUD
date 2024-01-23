@@ -81,11 +81,3 @@ public class TodoListTests
         afterTodoList.Should().BeNull();
     }
 }
-
-public class DeleteTodoListCommand
-{
-    public DeleteTodoListCommand(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-}
