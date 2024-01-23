@@ -20,7 +20,7 @@ public class UpdateTodoListCommandHandler : IRequestHandler<UpdateTodoListComman
         var todoList = _repository.Get(command.Id);
         if (todoList is null)
         {
-            throw new TodoListNotFoundException(command.Id);
+            throw new EntityNotFoundException(nameof(Domain.TodoList), command.Id);
         }
 
         todoList.UpdateTitle(command.Title);

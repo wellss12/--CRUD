@@ -4,6 +4,7 @@ using TodoList.Application.Commands;
 using TodoList.Application.Responses;
 using TodoList.Domain;
 using TodoList.Domain.Enums;
+using TodoList.Presentation;
 
 namespace TodoList.IntegrationTests;
 
@@ -30,11 +31,11 @@ public class TodoListTests
         var result = await _server.Client.GetAsync($"api/todo-list/{todoList.Id}");
 
         result.IsSuccessStatusCode.Should().BeTrue();
-        var content = await result.Content.ReadFromJsonAsync<TodoListResponse>();
-        content.Id.Should().Be(todoList.Id);
-        content.Title.Should().Be(todoList.Title);
-        content.TodoItems.Count().Should().Be(1);
-        content.TodoItems.Should().BeEquivalentTo(new List<TodoItemResponse>()
+        var content = await result.Content.ReadFromJsonAsync<DefaultResponse<TodoListResponse>>();
+        content.Data.Id.Should().Be(todoList.Id);
+        content.Data.Title.Should().Be(todoList.Title);
+        content.Data.TodoItems.Count().Should().Be(1);
+        content.Data.TodoItems.Should().BeEquivalentTo(new List<TodoItemResponse>()
         {
             new()
             {
@@ -165,7 +166,7 @@ public class TodoListTests
         afterTodoItem.Priority.Should().Be(command.Priority);
         afterTodoItem.DueDate.Should().Be(command.DueDate);
     }
-    
+
     [Category("TodoItem")]
     [Test]
     public async Task Remove_Todo_Item()
@@ -176,7 +177,8 @@ public class TodoListTests
         beforeTodoList.AddItem(beforeTodoItem);
         repository.Create(beforeTodoList);
 
-        var response = await _server.Client.DeleteAsync($"api/todo-list/{beforeTodoList.Id}/todo-item/{beforeTodoItem.Id}");
+        var response =
+            await _server.Client.DeleteAsync($"api/todo-list/{beforeTodoList.Id}/todo-item/{beforeTodoItem.Id}");
 
         response.IsSuccessStatusCode.Should().BeTrue();
         repository.Get(beforeTodoList.Id)!.TodoItems.Should().BeEmpty();

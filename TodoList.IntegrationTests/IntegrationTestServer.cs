@@ -12,5 +12,6 @@ public class IntegrationTestServer : WebApplicationFactory<Program>
         Client = CreateClient();
     }
 
-    public T GetRequiredService<T>() where T : notnull => Services.GetRequiredService<T>();
+    public T GetRequiredService<T>() where T : notnull
+        => Services.CreateScope().ServiceProvider.GetRequiredService<T>();
 }

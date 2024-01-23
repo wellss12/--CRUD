@@ -27,7 +27,7 @@ public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemComman
         var todoList = _repository.Get(command.ListId);
         if (todoList is null)
         {
-            throw new TodoListNotFoundException(command.ListId);
+            throw new EntityNotFoundException(nameof(Domain.TodoList), command.ListId);
         }
 
         var todoItem = new TodoItem(command.Title, command.Priority, command.ListId);

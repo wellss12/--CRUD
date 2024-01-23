@@ -8,7 +8,7 @@ public class TodoItem
     {
         if (string.IsNullOrWhiteSpace(title))
         {
-            throw new Exception("Title is required");
+            throw new ArgumentException("Title is required");
         }
 
         Id = Guid.NewGuid();

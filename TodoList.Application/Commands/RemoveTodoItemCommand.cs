@@ -20,13 +20,13 @@ public class RemoveTodoItemCommandHandler : IRequestHandler<RemoveTodoItemComman
         var todoList = _repository.Get(command.ListId);
         if (todoList is null)
         {
-            throw new TodoListNotFoundException(command.ListId);
+            throw new EntityNotFoundException(nameof(Domain.TodoList), command.ListId);
         }
 
         var todoItem = todoList.TodoItems.FirstOrDefault(x => x.Id == command.ItemId);
         if (todoItem is null)
         {
-            throw new TodoItemNotFoundException(command.ItemId);
+            throw new EntityNotFoundException(nameof(Domain.TodoItem), command.ItemId);
         }
 
         todoList.RemoveItem(todoItem);

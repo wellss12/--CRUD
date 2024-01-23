@@ -1,6 +1,7 @@
 using TodoList.Application.Extensions;
 using TodoList.Domain;
 using TodoList.Infrastructure;
+using TodoList.Presentation.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseAuthorization();
 

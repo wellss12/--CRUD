@@ -18,9 +18,13 @@ public class TodoListController : ControllerBase
     }
 
     [HttpGet("{id:Guid}")]
-    public async Task<TodoListResponse> Get(Guid id)
+    public async Task<DefaultResponse<TodoListResponse>> Get(Guid id)
     {
-        return await _mediator.Send(new GetTodoListQuery(id));
+        var todoListResponse = await _mediator.Send(new GetTodoListQuery(id));
+        return new DefaultResponse<TodoListResponse>()
+        {
+            Data = todoListResponse
+        };
     }
 
     [HttpPost]
