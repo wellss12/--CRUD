@@ -16,4 +16,8 @@
       <Compile Remove="Controllers\WeatherForecastController.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TodoList.Application\TodoList.Application.csproj" />
+    </ItemGroup>
+
 </Project>
