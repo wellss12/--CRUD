@@ -101,30 +101,25 @@ public class TodoListTests
             ListId = todoListId,
             Title = "TodoItem",
             Priority = Priority.Medium,
-            DueDate = new DateOnly(2024,2,20)
+            DueDate = new DateOnly(2024, 2, 20)
         };
         var jsonContent = JsonContent.Create(command);
-        
+
         // Act
         var response = await _server.Client.PostAsync($"api/todo-list/{todoListId}/todo-item", jsonContent);
-        
+
         // Assert
         response.IsSuccessStatusCode.Should().BeTrue();
         var todoItemId = await response.Content.ReadFromJsonAsync<Guid>();
         todoItemId.Should().NotBeEmpty();
-        
+
         var afterTodoList = repository.Get(todoListId)!;
         var todoItems = afterTodoList.TodoItems;
         todoItems.Count.Should().Be(1);
-        todoItems.First().Id.Should().Be(todoItemId);
-        todoItems.First().Title.Should().Be(command.Title);
+        var todoItem = todoItems[0];
+        todoItem.Id.Should().Be(todoItemId);
+        todoItem.Title.Should().Be(command.Title);
+        todoItem.Priority.Should().Be(command.Priority);
+        todoItem.DueDate.Should().Be(command.DueDate);
     }
-}
-
-public class CreateTodoItemCommand
-{
-    public Guid ListId { get; set; }
-    public string Title { get; set; }
-    public Priority? Priority { get; set; }
-    public DateOnly? DueDate { get; set; }
 }
