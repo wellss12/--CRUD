@@ -3,7 +3,7 @@
 public interface ITodoListRepository
 {
     TodoList? Get(Guid listId);
-    void Create(TodoList todoList);
-    void Update(TodoList todoList);
-    void Delete(Guid listId);
+    Task Create(TodoList todoList);
+    Task Update(TodoList todoList);
+    Task Delete(TodoList listId);
 }

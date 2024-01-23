@@ -4,15 +4,19 @@ public class TodoList
 {
     private readonly List<TodoItem> _todoItems = new();
 
-    public TodoList(string title)
+    public TodoList(Guid id, string title) 
     {
         if (string.IsNullOrWhiteSpace(title))
         {
             throw new ArgumentException("Title is required");
         }
 
-        Id = Guid.NewGuid();
+        Id = id;
         Title = title;
+    }
+
+    public TodoList(string title) : this(Guid.NewGuid(), title)
+    {
     }
 
     public Guid Id { get; }
@@ -25,4 +29,9 @@ public class TodoList
     public void AddItem(TodoItem item) => _todoItems.Add(item);
 
     public void RemoveItem(TodoItem item) => _todoItems.Remove(item);
+
+    public void AddItems(IEnumerable<TodoItem> todoItems)
+    {
+        _todoItems.AddRange(todoItems);
+    }
 }

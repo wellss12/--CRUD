@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TodoList.Application.Extensions;
 using TodoList.Domain;
 using TodoList.Infrastructure;
@@ -12,7 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediator();
-builder.Services.AddSingleton<ITodoListRepository, TodoListRepository>();
+builder.Services.AddScoped<ITodoListRepository, TodoListRepository>();
+var connectionString = builder.Configuration.GetConnectionString("TodoListDb");
+builder.Services.AddDbContext<TodoListDbContext>(options =>
+    options.UseSqlite(connectionString));
+
 
 var app = builder.Build();
 

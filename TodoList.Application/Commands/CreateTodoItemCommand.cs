@@ -37,7 +37,7 @@ public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemComman
         }
         
         todoList.AddItem(todoItem);
-        _repository.Update(todoList);
+        await _repository.Update(todoList);
         return todoItem.Id;
     }
 }

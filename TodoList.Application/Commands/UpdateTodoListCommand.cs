@@ -24,6 +24,6 @@ public class UpdateTodoListCommandHandler : IRequestHandler<UpdateTodoListComman
         }
 
         todoList.UpdateTitle(command.Title);
-        _repository.Update(todoList);
+        await _repository.Update(todoList);
     }
 }

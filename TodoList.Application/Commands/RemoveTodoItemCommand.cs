@@ -30,6 +30,6 @@ public class RemoveTodoItemCommandHandler : IRequestHandler<RemoveTodoItemComman
         }
 
         todoList.RemoveItem(todoItem);
-        _repository.Update(todoList);
+        await _repository.Update(todoList);
     }
 }

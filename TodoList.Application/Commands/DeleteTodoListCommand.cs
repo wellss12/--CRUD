@@ -4,7 +4,7 @@ using TodoList.Domain.Exceptions;
 
 namespace TodoList.Application.Commands;
 
-public record DeleteTodoListCommand(Guid Id): IRequest;
+public record DeleteTodoListCommand(Guid Id) : IRequest;
 
 public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>
 {
@@ -23,6 +23,6 @@ public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListComman
             throw new EntityNotFoundException(nameof(Domain.TodoList), command.Id);
         }
 
-        _repository.Delete(todoList.Id);
+        await _repository.Delete(todoList);
     }
 }

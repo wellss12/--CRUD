@@ -1,32 +1,81 @@
-﻿using DM = TodoList.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using TodoList.Domain.Enums;
+using TodoList.Infrastructure.DataModels;
+using DM = TodoList.Domain;
 
 namespace TodoList.Infrastructure;
 
 public class TodoListRepository : DM.ITodoListRepository
 {
-    private readonly Dictionary<Guid, DM.TodoList> _todoListMap = new();
+    private readonly TodoListDbContext _dbContext;
+
+    public TodoListRepository(TodoListDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
 
     public DM.TodoList? Get(Guid listId)
     {
-        var isExists = _todoListMap.TryGetValue(listId, out var todoList);
-        return isExists ? todoList : null;
-    }
+        var dateModel = _dbContext.TodoLists
+            .Include(t => t.TodoItems)
+            .AsNoTracking()
+            .FirstOrDefault(t => t.Id == listId.ToString());
 
-    public void Create(DM.TodoList todoList)
-    {
-        if (!_todoListMap.TryAdd(todoList.Id, todoList))
+        if (dateModel is null)
         {
-            throw new InvalidOperationException($"Todo list with id {todoList.Id} already exists");
+            return null;
         }
+
+        var todoList = new DM.TodoList(Guid.Parse(dateModel.Id), dateModel.Title);
+        var todoItems = dateModel.TodoItems.Select(t =>
+        {
+            var itemId = Guid.Parse(t.Id);
+            var priority = (Priority)t.Priority;
+            return new DM.TodoItem(itemId, t.Title, priority, todoList.Id);
+        });
+
+        todoList.AddItems(todoItems);
+        return todoList;
     }
 
-    public void Update(DM.TodoList todoList)
+    public async Task Create(DM.TodoList todoList)
     {
-        _todoListMap[todoList.Id] = todoList;
+        await _dbContext.TodoLists.AddAsync(new TodoListDataModel
+        {
+            Id = todoList.Id.ToString(),
+            Title = todoList.Title
+        });
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void Delete(Guid listId)
+    public async Task Update(DM.TodoList todoList)
     {
-        _todoListMap.Remove(listId);
+        var dataModel = new TodoListDataModel
+        {
+            Id = todoList.Id.ToString(),
+            Title = todoList.Title,
+            TodoItems = todoList.TodoItems.Select(t => new TodoItemDataModel
+            {
+                Id = t.Id.ToString(),
+                Title = t.Title,
+                Priority = (int)t.Priority,
+                DueDate = t.DueDate?.ToString(),
+                TodoListId = todoList.Id.ToString()
+            }).ToList()
+        };
+
+        _dbContext.TodoLists.Update(dataModel);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task Delete(DM.TodoList listId)
+    {
+        var dataModel = new TodoListDataModel
+        {
+            Id = listId.Id.ToString()
+        };
+
+        _dbContext.TodoLists.Remove(dataModel);
+        await _dbContext.SaveChangesAsync();
     }
 }

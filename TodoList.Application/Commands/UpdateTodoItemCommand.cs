@@ -48,6 +48,6 @@ public class UpdateTodoItemCommandHandler : IRequestHandler<UpdateTodoItemComman
             todoItem.DueDate = command.DueDate;
         }
 
-        _repository.Update(todoList);
+        await _repository.Update(todoList);
     }
 }

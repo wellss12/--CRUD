@@ -14,10 +14,10 @@ public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListComman
         _repository = repository;
     }
 
-    public Task<Guid> Handle(CreateTodoListCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateTodoListCommand command, CancellationToken cancellationToken)
     {
         var todoList = new Domain.TodoList(command.Title);
-        _repository.Create(todoList);
-        return Task.FromResult(todoList.Id);
+        await _repository.Create(todoList);
+        return todoList.Id;
     }
 }

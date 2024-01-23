@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using TodoList.Application.Responses;
 using TodoList.Domain;
+using TodoList.Domain.Exceptions;
 
 namespace TodoList.Application.Queries;
 
@@ -18,6 +19,10 @@ public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, TodoLis
     public async Task<TodoListResponse> Handle(GetTodoListQuery query, CancellationToken cancellationToken)
     {
         var todoList = _repository.Get(query.Id);
+        if (todoList is null)
+        {
+            throw new EntityNotFoundException(nameof(Domain.TodoList), query.Id);
+        }
         
         return new TodoListResponse
         {
