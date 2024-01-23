@@ -152,4 +152,20 @@ public class TodoListTests
         afterTodoItem.Priority.Should().Be(command.Priority);
         afterTodoItem.DueDate.Should().Be(command.DueDate);
     }
+    
+    [Category("TodoItem")]
+    [Test]
+    public async Task Delete_Todo_Item()
+    {
+        var repository = _server.GetRequiredService<ITodoListRepository>();
+        var beforeTodoList = new Domain.TodoList("Todo");
+        var beforeTodoItem = new TodoItem("TodoItem", Priority.Low, beforeTodoList.Id);
+        beforeTodoList.AddItem(beforeTodoItem);
+        repository.Create(beforeTodoList);
+
+        var response = await _server.Client.DeleteAsync($"api/todo-list/{beforeTodoList.Id}/todo-item/{beforeTodoItem.Id}");
+
+        response.IsSuccessStatusCode.Should().BeTrue();
+        repository.Get(beforeTodoList.Id)!.TodoItems.Should().BeEmpty();
+    }
 }
