@@ -1,4 +1,6 @@
 using TodoList.Application.Extensions;
+using TodoList.Domain;
+using TodoList.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediator();
+builder.Services.AddSingleton<ITodoListRepository, TodoListRepository>();
 
 var app = builder.Build();
 

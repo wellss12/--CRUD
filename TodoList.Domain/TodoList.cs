@@ -2,6 +2,11 @@
 
 public class TodoList
 {
-    public Guid Id { get; set; }
-    public string Title { get; set; }
+    public TodoList(string title)
+    {
+        Id = Guid.NewGuid();
+        Title = title;
+    }
+    public Guid Id { get; }
+    public string Title { get; }
 }

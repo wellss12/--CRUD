@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TodoList.Application.Commands;
 using TodoList.Application.Queries;
 using TodoList.Application.Responses;
 
@@ -18,4 +19,7 @@ public class TodoListController : ControllerBase
 
     [HttpGet("{id:Guid}")]
     public async Task<TodoListResponse> Get(Guid id) => await _mediator.Send(new GetTodoListQuery(id));
+    
+    [HttpPost]
+    public async Task<Guid> Create([FromBody] CreateTodoListCommand command) => await _mediator.Send(command);
 }

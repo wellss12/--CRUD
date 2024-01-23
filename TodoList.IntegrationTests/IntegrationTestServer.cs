@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TodoList.IntegrationTests;
 
@@ -10,4 +11,6 @@ public class IntegrationTestServer : WebApplicationFactory<Program>
     {
         Client = CreateClient();
     }
+
+    public T GetRequiredService<T>() where T : notnull => Services.GetRequiredService<T>();
 }
